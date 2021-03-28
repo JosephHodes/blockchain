@@ -1,0 +1,18 @@
+{
+  "name": "js-blockchain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^4.0.0",
+    "obfuscate": "0.0.11"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^2.11.0"
+  }
+}
