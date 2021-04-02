@@ -10,23 +10,34 @@ class Block {
         this.index = 0;
         this.timestamp = timestamp;
         this.data = data;
-        this.previousHash = "0";
-        this.hash = this.calculateHash();
-        this.nonce = 0;
+        this.previousHash=null;
+        this.hash = null;
+        this.nonce = Math.random();
+        this.count=0;
     }
 
     calculateHash() {
+        this.count+=1;
         //passing in the peramaters to encrypt 
         return x.SHA512(this.index + this.previousHash + this.timestamp + this.data + this.nonce).toString();
     }
 
     mineBlock(difficulty) {
-//waiting for a part two
+    let string = "0".repeat(difficulty)
+    for (;;){
+    this.nonce=Math.floor(Math.random()*1000)
+    let hash=this.calculateHash()
+    if(hash.startsWith(string)){
+        return hash
+    }
+    }
     }
 }
 class Blockchain {
-    constructor() {
+    constructor(difficulty) {
         this.chain = [this.createGenesis()];
+        this.difficulty=difficulty
+        this.string = "0".repeat(difficulty)
     }
 
     createGenesis() {
@@ -39,13 +50,13 @@ class Blockchain {
 
     addBlock(newBlock) {
         newBlock.previousHash = this.latestBlock().hash;
-        newBlock.hash = newBlock.calculateHash();
+        newBlock.hash = newBlock.mineBlock(this.difficulty);
         this.chain.push(newBlock);
     }
 
     checkValid() {
         //itterating through each block
-        for (let i = 1; i < this.chain.length; i++) {
+        for (let i = 0; i < this.chain.length; i++) {
             const currentBlock = this.chain[i];
             const previousBlock = this.chain[i - 1];
             // checking if the current blocks hash is the same as if it was recalculated
@@ -56,13 +67,19 @@ class Blockchain {
             if (currentBlock.previousHash !== previousBlock.hash) {
                 return false;
             }
+            if(!currentBlock.hash.startsWith(this.string)){
+            return false
+            }
+            if (!previousBlock.hash.startsWith(this.string)) {
+                return false
+            }
         }
-
+    
         return true;
     }
 }
 
-let jsChain = new Blockchain();
+let jsChain = new Blockchain(2);
 jsChain.addBlock(new Block("12/25/2017", { amount: 5 }));
 jsChain.addBlock(new Block("12/26/2017", { amount: 100000 }));
 
